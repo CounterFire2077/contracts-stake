@@ -1,0 +1,17 @@
+{
+  "name": "contracts-staking",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile --show-stack-traces",
+    "clean": "hardhat clean"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@imtbl/contracts": "^2.2.7",
+    "@openzeppelin/contracts": "^4.9.3"
+  },
+}
