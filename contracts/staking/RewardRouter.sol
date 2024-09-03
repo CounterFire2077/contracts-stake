@@ -56,6 +56,11 @@ contract RewardRouter is ReentrancyGuard, Governable {
   }
 
   function unstakeCec(uint256 _amount) external nonReentrant {
+    // check if the user has staked CEC in the vester
+    if (IVester(cecVester).needCheckStake()) {
+      IVester(cecVester).updateVesting(msg.sender);
+      require(IERC20(cecVester).balanceOf(msg.sender) + _amount <= IRewardTracker(stakedCecTracker).depositBalances(msg.sender, cec), "RewardRouter: insufficient CEC balance");
+    }
     _unstakeCec(msg.sender, cec, _amount);
   }
 
@@ -64,12 +69,6 @@ contract RewardRouter is ReentrancyGuard, Governable {
   }
 
   function claim() external nonReentrant {
-    address account = msg.sender;
-
-    IRewardTracker(stakedCecTracker).claimForAccount(account, account);
-  }
-
-  function claimEsCec() external nonReentrant {
     address account = msg.sender;
     IRewardTracker(stakedCecTracker).claimForAccount(account, account);
   }

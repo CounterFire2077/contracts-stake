@@ -289,7 +289,11 @@ contract Vester is IVester, IERC20, ReentrancyGuard, Governable {
     emit Deposit(_account, _amount);
   }
 
-  function _updateVesting(address _account) private {
+  function updateVesting(address _account) public {
+    _updateVesting(_account);
+  }
+
+  function _updateVesting(address _account) public {
     uint256 amount = _getNextClaimableAmount(_account);
     lastVestingTimes[_account] = block.timestamp;
 

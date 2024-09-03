@@ -22,7 +22,7 @@ contract RewardTracker is IERC20, ReentrancyGuard, IRewardTracker, Governable {
   uint8 public decimals = 18;
   uint256 public override totalSupply;
   mapping(address account => uint256 amount) public balances;
-  mapping(address owner => mapping(address spender => uint256 amount)) public allowances;
+  mapping(address owner => mapping(address spender => uint256 amount)) public allowance;
 
   address public distributor;
   mapping(address token => bool status) public isDepositToken;
@@ -128,10 +128,7 @@ contract RewardTracker is IERC20, ReentrancyGuard, IRewardTracker, Governable {
     return true;
   }
 
-  function allowance(address _owner, address _spender) external view override returns (uint256) {
-    return allowances[_owner][_spender];
-  }
-
+  
   function approve(address _spender, uint256 _amount) external override returns (bool) {
     _approve(msg.sender, _spender, _amount);
     return true;
@@ -142,8 +139,8 @@ contract RewardTracker is IERC20, ReentrancyGuard, IRewardTracker, Governable {
       _transfer(_sender, _recipient, _amount);
       return true;
     }
-    require(allowances[_sender][msg.sender] >= _amount, "RewardTracker: transfer amount exceeds allowance");
-    uint256 nextAllowance = allowances[_sender][msg.sender] - _amount;
+    require(allowance[_sender][msg.sender] >= _amount, "RewardTracker: transfer amount exceeds allowance");
+    uint256 nextAllowance = allowance[_sender][msg.sender] - _amount;
     _approve(_sender, msg.sender, nextAllowance);
     _transfer(_sender, _recipient, _amount);
     return true;
@@ -236,7 +233,7 @@ contract RewardTracker is IERC20, ReentrancyGuard, IRewardTracker, Governable {
     require(_owner != address(0), "RewardTracker: approve from the zero address");
     require(_spender != address(0), "RewardTracker: approve to the zero address");
 
-    allowances[_owner][_spender] = _amount;
+    allowance[_owner][_spender] = _amount;
 
     emit Approval(_owner, _spender, _amount);
   }

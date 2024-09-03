@@ -2,6 +2,9 @@
 pragma solidity 0.8.19;
 
 interface IVester {
+  function needCheckStake() external view returns (bool);
+  function updateVesting(address _account) external;
+
   function rewardTracker() external view returns (address);
 
   function claimForAccount(address _account, address _receiver) external returns (uint256);
